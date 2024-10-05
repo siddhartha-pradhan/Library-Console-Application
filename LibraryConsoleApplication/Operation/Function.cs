@@ -1,67 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibraryConsoleApplication.Operation;
+﻿using LibraryConsoleApplication.Models;
 
-namespace LibraryApplication.Operation;
+namespace LibraryConsoleApplication.Operation;
 
 public class Function
 {
-    private List<Book> books = new List<Book>();
+    private readonly List<Book> _books = [];
 
-    public Book BookDetails(string action)
+    public static Book BookDetails(string action)
     {
         var book = new Book();
 
         while (true)
         {
-            var result = int.TryParse(Util.Console.AskQuestion($"\nBook ID [to be {action}]: "), out int Id);
+            var result = int.TryParse(Utility.Console.AskQuestion($"\nBook ID [to be {action}]: "), out var id);
 
             if (result)
             {
-                book.Id = Id;
+                book.Id = id;
                 break;
             }
-            else
-            {
-                Console.WriteLine("Enter a valid integer for book code.\n");
-            }
+
+            Console.WriteLine("Enter a valid integer for book code.\n");
         }
 
-        book.Title = Util.Console.AskQuestion("Book Title: ");
+        book.Title = Utility.Console.AskQuestion("Book Title: ");
 
-        book.Author = Util.Console.AskQuestion("Book Author: ");
+        book.Author = Utility.Console.AskQuestion("Book Author: ");
 
         while (true)
         {
-            var result = int.TryParse(Util.Console.AskQuestion("Book Quantity: "), out int quantity);
+            var result = int.TryParse(Utility.Console.AskQuestion("Book Quantity: "), out int quantity);
 
             if (result)
             {
                 book.Quantity = quantity;
                 break;
             }
-            else
-            {
-                Console.WriteLine("Enter a valid integer for book quantity.\n");
-            }
+
+            Console.WriteLine("Enter a valid integer for book quantity.\n");
         }
 
         while (true)
         {
-            var result = decimal.TryParse(Util.Console.AskQuestion("Book Price: $"), out decimal price);
+            var result = decimal.TryParse(Utility.Console.AskQuestion("Book Price: $"), out var price);
 
             if (result)
             {
                 book.UnitPrice = price;
                 break;
             }
-            else
-            {
-                Console.WriteLine("Enter a valid price for book price.\n");
-            }
+
+            Console.WriteLine("Enter a valid price for book price.\n");
         }
 
         return book;
@@ -69,9 +58,9 @@ public class Function
 
     public void DisplayBooks()
     {
-        if (books.Count != 0)
+        if (_books.Count != 0)
         {
-            foreach (var book in books)
+            foreach (var book in _books)
             {
                 Console.WriteLine($"\nBook ID: {book.Id}");
                 Console.WriteLine($"Book Title: {book.Title}");
@@ -90,7 +79,7 @@ public class Function
     {
         try
         {
-            books.Add(book);
+            _books.Add(book);
             Console.WriteLine("\nBook successfully added.");
         }
         catch (Exception)
@@ -103,7 +92,7 @@ public class Function
     {
         try
         {
-            var bookObject = books.FirstOrDefault(b => b.Id == book.Id);
+            var bookObject = _books.FirstOrDefault(b => b.Id == book.Id);
 
             if (bookObject != null)
             {
@@ -125,15 +114,15 @@ public class Function
         }
     }
 
-    public void DeleteBook(int Id)
+    public void DeleteBook(int id)
     {
         try
         {
-            var bookObject = books.FirstOrDefault(b => b.Id == Id);
+            var bookObject = _books.FirstOrDefault(b => b.Id == id);
 
             if (bookObject != null)
             {
-                books.Remove(bookObject);
+                _books.Remove(bookObject);
                 Console.WriteLine("\nBook successfully deleted.");
             }
             else
@@ -148,8 +137,8 @@ public class Function
         }
     }
 
-    public string RepeatQuestion(string operation)
+    public static string RepeatQuestion(string operation)
     {
-        return Util.Console.AskQuestion($"\nDo you want to {operation} another book? (Y/N) ");
+        return Utility.Console.AskQuestion($"\nDo you want to {operation} another book? (Y/N) ");
     }
 }
